@@ -10,9 +10,31 @@ class TBQueueCommand(TBClientCommand):
         super(TBQueueCommand, self).__init__(*args, **kwargs)
 
     def help(self):
-        return "blah"
+        return """queue command supports varios operations on tinderd queue
+
+Queue Listing:
+
+    Just use 'queue' command without arguments to list queue entries
+
+Obtaining Detailed Info on Queue Entry:
+
+    queue <entry_id>
+
+    <entry_id>   id of an queue entry
+
+Adding Entry to the Queue:
+
+    queue add -b <build_id> [-e] [-p <priority>] category/port
+
+    -b $build_id    id of the build we're working with
+    -e              specifiy to email on completion (optional, default: false)
+    -p <priority>   entry priority, supported values: from 1 to 10 (optional, default: 10)
+    category/port   port we want to build, for example: security/gnutls
+"""
 
     def start(self):
+        super(TBQueueCommand, self).start()
+
         if len(self.clargs) == 0:
             return self._list_queue()
         else:

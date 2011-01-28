@@ -7,9 +7,22 @@ class TBBuildCommand(TBClientCommand):
         super(TBBuildCommand, self).__init__(*args, **kwargs)
 
     def help(self):
-        return "blah"
+        return """build command provides various information on Builds
+    
+Builds Listing
+
+    Just use 'build' command without arguments to list all builds
+
+Obtaining Detailed Info on Specific Build
+
+    build <build_id>
+
+    <build_id>  id of a build
+"""
 
     def start(self):
+        super(TBBuildCommand, self).start()
+
         if len(self.clargs) == 0:
             # list all builds if not args given
             return self._list_builds()
