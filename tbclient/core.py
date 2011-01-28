@@ -24,6 +24,17 @@ class Build(object):
     def from_dict(cls, dict_):
         return cls(**dict_["build"])
 
+class BuildPort(object):
+
+    def __init__(self, **kwargs):
+        self.id = kwargs["id"]
+        self.directory = kwargs["directory"]
+
+
+    @classmethod
+    def from_dict(cls, dict_):
+        return cls(**dict_["buildport"])
+
 class QueueEntry(object):
 
     def __init__(self, **kwargs):
@@ -58,6 +69,8 @@ class TinderboxClient(object):
         self.username = username
         self.password = passwd
 
+        self.debug = False
+
     def _auth_token(self):
         token = hashlib.md5()
 
@@ -81,11 +94,12 @@ class TinderboxClient(object):
 
         data = response.read()
 
+        if self.debug:
+            print "----"
+            print data
+            print "-----"
+            print ""
 
-        print "----"
-        print data
-        print "-----"
-        print ""
         conn.close()
 
         return json.loads(data)
@@ -105,6 +119,21 @@ class TinderboxClient(object):
 
     def build(self, build_id):
         return self.builds(build_id=build_id)[0]
+
+    def buildports(self, build_id=None):
+        request_url = "buildports"
+        
+        response = self._request("GET", request_url)
+
+        buildports = []
+        for item in response["buildports"]:
+            buildport = {}
+            buildport["target_port"] = item["buildport"]["target_port"]
+            buildport["build"] = Build.from_dict(item["buildport"]["build"])
+            buildport["buildport"] = BuildPort.from_dict(item["buildport"]["buildport"])
+            buildports.append(buildport)
+        
+        return buildports
 
     def queue_entries(self, entry_id=None):
         request_url = "queue.php"

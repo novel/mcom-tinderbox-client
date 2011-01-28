@@ -42,9 +42,10 @@ def supported_commands():
 
 if __name__ == "__main__":
     tinderbox_client_kwargs = {}
+    debug = False
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "a:hu:p:")
+        opts, args = getopt.getopt(sys.argv[1:], "a:dhu:p:")
     except getopt.GetoptError, err:
         print str(err)
         usage(sys.argv[0])
@@ -53,6 +54,8 @@ if __name__ == "__main__":
     for o, a in opts:
         if o == "-a":
             tinderbox_client_kwargs["url"] = a
+        elif o == "-d":
+            debug = True
         elif o == "-h":
             info_help(sys.argv[0])
             sys.exit(0)
@@ -77,11 +80,12 @@ if __name__ == "__main__":
         sys.exit(0)
 
     tinderboxclient = TinderboxClient(**tinderbox_client_kwargs)
+    tinderboxclient.debug = debug
    
     try:
-        command_name = sys.argv[1]
+        command_name = args[0]
         command = supported_commands()[command_name] \
-                (clargs=sys.argv[2:],
+                (clargs=args[1:],
                  tinderboxclient=tinderboxclient)
     except (IndexError, KeyError):
         usage(sys.argv[0])
