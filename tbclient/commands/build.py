@@ -1,3 +1,4 @@
+from tbclient.core import ObjectNotFound
 from base import TBClientCommand
 
 class TBBuildCommand(TBClientCommand):
@@ -38,9 +39,10 @@ Obtaining Detailed Info on Specific Build
             "%(currentport)s %(updated)s") % build.__dict__
 
     def _get_build(self, build_id):
-        build = self.tinderboxclient.build(build_id)
+        try:
+            build = self.tinderboxclient.build(build_id)
 
-        print """name: %(name)s
+            print """name: %(name)s
 description: %(description)s
 status: %(status)s
 updated: %(updated)s
@@ -48,4 +50,6 @@ currentport: %(currentport)s
 remake count: %(remakecount)s
 jail id: %(jail_id)s
 portstree_id: %(portstree_id)s
-""" % build.__dict__
+    """ % build.__dict__
+        except ObjectNotFound:
+            print "Error: Cannot find build with id = %s" % build_id

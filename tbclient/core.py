@@ -7,6 +7,9 @@ try:
 except ImportError:
     import simplejson as json
 
+class ServiceException(Exception): pass
+class ObjectNotFound(ServiceException): pass
+
 class Build(object):
 
     def __init__(self, **kwargs):
@@ -95,17 +98,23 @@ class TinderboxClient(object):
         data = response.read()
 
         if self.debug:
-            print "----"
+            print "---- request ----"
+            print url
+            print "- %s %s -" % (response.status, response.reason)
+            print "- response body -"
             print data
-            print "-----"
+            print "----------------"
             print ""
 
         conn.close()
 
+        if response.status == 404:
+            raise ObjectNotFound("object not found at url: %s" % url)
+
         return json.loads(data)
 
     def builds(self, build_id=None):
-        request_url = "build.php"
+        request_url = "build"
         if build_id is not None:
             request_url += "?id=%s" % build_id
 
