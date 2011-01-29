@@ -7,8 +7,11 @@ try:
 except ImportError:
     import simplejson as json
 
+API_VERSION = "1.0"
+
 class ServiceException(Exception): pass
 class ObjectNotFound(ServiceException): pass
+class MalformedResponse(ServiceException): pass
 
 class Build(object):
 
@@ -86,7 +89,8 @@ class TinderboxClient(object):
 
     def _request(self, method, url, body=None, headers=None):
         all_headers = {"X-Tinderbox-User": self.username,
-                "X-Tinderbox-Token": self._auth_token()}
+                "X-Tinderbox-Token": self._auth_token(),
+                "X-Tinderbox-API-Version": API_VERSION}
         if headers is not None:
             all_headers.update(headers)
 
@@ -111,7 +115,12 @@ class TinderboxClient(object):
         if response.status == 404:
             raise ObjectNotFound("object not found at url: %s" % url)
 
-        return json.loads(data)
+        parsed_data = json.loads(data)
+
+        if parsed_data['summary']['status'] != "ok":
+            raise ServiceException(parsed_data['summary']['reason'])
+
+        return parsed_data
 
     def builds(self, build_id=None):
         request_url = "build"
@@ -131,7 +140,7 @@ class TinderboxClient(object):
         return self.builds(build_id=build_id)[0]
 
     def buildports(self, build_id=None):
-        request_url = "buildports"
+        request_url = "buildport"
         
         response = self._request("GET", request_url)
 
@@ -170,4 +179,4 @@ class TinderboxClient(object):
         response = self._request("PUT", request_url,
                 body=json.dumps(queue_entry))
 
-        return []
+        return True

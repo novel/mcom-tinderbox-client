@@ -92,7 +92,7 @@ completed at: %(completed)s
              print "error: build_id or port dir not specified"
              sys.exit(2)
 
-        print self.tinderboxclient.add_queue_entry(build_id=build_id,
+        self.tinderboxclient.add_queue_entry(build_id=build_id,
                 priority=priority,
                 portdir=nargs[0],
                 email=email)
