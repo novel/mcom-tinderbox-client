@@ -116,11 +116,12 @@ class TinderboxClient(object):
     def builds(self, build_id=None):
         request_url = "build"
         if build_id is not None:
-            request_url += "?id=%s" % build_id
+            request_url += "/%s" % build_id
 
         response = self._request("GET", request_url)
 
         builds = [] 
+
         for build in response["builds"]:
             builds.append(Build.from_dict(build))
 
@@ -145,9 +146,9 @@ class TinderboxClient(object):
         return buildports
 
     def queue_entries(self, entry_id=None):
-        request_url = "queue.php"
+        request_url = "queue"
         if entry_id is not None:
-            request_url += "?id=%s" % entry_id
+            request_url += "/%s" % entry_id
 
         response = self._request("GET", request_url)
 
@@ -161,7 +162,7 @@ class TinderboxClient(object):
         return self.queue_entries(entry_id=entry_id)[0]
 
     def add_queue_entry(self, build_id, priority, portdir, email):
-        request_url = "queue.php"
+        request_url = "queue"
         queue_entry = QueueEntry.construct_request_obj({"build": {"id": build_id}, "portdirectory": portdir,
             "priority": priority,
             "email_on_completion": email})

@@ -1,6 +1,7 @@
 import getopt
 import sys
 
+from tbclient.core import ObjectNotFound
 from base import TBClientCommand
 
 class TBQueueCommand(TBClientCommand):
@@ -48,14 +49,15 @@ Adding Entry to the Queue:
         queue_entries = self.tinderboxclient.queue_entries()
 
         for entry in queue_entries:
-            print ("%(id)3s %(portdirectory)20s %(buildname)s %(priority)s "
+            print ("%(id)3s %(username)s %(portdirectory)20s %(buildname)s %(priority)s "
                "%(status)s %(enqueued)s %(completed)s" ) % \
                     entry.__dict__
 
     def _get_queue_entry(self, entry_id):
-        entry = self.tinderboxclient.queue_entry(entry_id)
+        try:
+            entry = self.tinderboxclient.queue_entry(entry_id)
 
-        print """id: %(id)s
+            print """id: %(id)s
 username: %(username)s (id: %(user_id)s)
 status: %(status)s
 port directory: %(portdirectory)s
@@ -64,6 +66,8 @@ build: %(buildname)s (id: %(build_id)s)
 enqueued at: %(enqueued)s
 completed at: %(completed)s
 """ % entry.__dict__
+        except ObjectNotFound:
+            print "Error: there is no queue entry with id = %s" % entry_id
 
     def _add_queue_entry(self, args):
         try:
