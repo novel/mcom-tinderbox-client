@@ -19,7 +19,7 @@ Installation is pretty simple, just execute:
 Configuration
 -------------
 
-Create a configuration file ~/.trc:
+Create a configuration file ~/.tbc:
 
 	[default]
 	apihost = tindy.my
@@ -28,7 +28,7 @@ Create a configuration file ~/.trc:
 
 Set reasonable permissions on it:
 
-	chmod 600 ~/.trc
+	chmod 600 ~/.tbc
 
 And now you should be ready.
 
