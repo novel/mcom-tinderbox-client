@@ -46,12 +46,16 @@ Adding Entry to the Queue:
         
 
     def _list_queue(self):
+        queue_format = ("%(id)3s %(username)10s %(portdirectory)20s %(buildname)12s %(priority)3s "
+                "%(status)10s %(enqueued)19s %(completed)19s")
         queue_entries = self.tinderboxclient.queue_entries()
 
+        print queue_format % {"id": "id", "username": "username",
+                "portdirectory": "port", "buildname": "build",
+                "priority": "pri", "status": "status", "enqueued": "enqueued",
+                "completed": "completed"}
         for entry in queue_entries:
-            print ("%(id)3s %(username)s %(portdirectory)20s %(buildname)s %(priority)s "
-               "%(status)s %(enqueued)s %(completed)s" ) % \
-                    entry.__dict__
+            print queue_format % entry.__dict__
 
     def _get_queue_entry(self, entry_id):
         try:

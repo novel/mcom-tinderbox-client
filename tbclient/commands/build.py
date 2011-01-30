@@ -32,11 +32,15 @@ Obtaining Detailed Info on Specific Build
         
 
     def _list_builds(self):
+        build_format = ("%(id)3s %(name)14s %(status)10s "
+            "%(currentport)14s %(updated)s")
         builds = self.tinderboxclient.builds()
-
+       
+        print build_format % {"id": "id", "name": "name",
+                "status": "status", "currentport": "current port",
+                "updated": "updated"}
         for build in builds:
-            print ("%(id)3s %(name)16s %(status)s " 
-            "%(currentport)s %(updated)s") % build.__dict__
+            print build_format % build.__dict__
 
     def _get_build(self, build_id):
         try:
