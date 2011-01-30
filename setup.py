@@ -6,5 +6,5 @@ setup(name="tbclient",
         author="Roman Bogorodskiy",
         author_email="novel@FreeBSD.org",
         packages=["tbclient.commands", "tbclient"],
-        scripts=["tbc.py"],
+        scripts=["tbc"],
 )
