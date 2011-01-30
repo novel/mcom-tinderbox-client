@@ -105,6 +105,8 @@ class TinderboxClient(object):
             print "---- request ----"
             print url
             print "- %s %s -" % (response.status, response.reason)
+            print " - request body -"
+            print body
             print "- response body -"
             print data
             print "----------------"
