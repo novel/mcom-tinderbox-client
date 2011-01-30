@@ -94,7 +94,7 @@ class TinderboxClient(object):
         if headers is not None:
             all_headers.update(headers)
 
-        conn = httplib.HTTPConnection(self.url)
+        conn = httplib.HTTPSConnection(self.url)
         conn.request(method, "/api/" + url, body, all_headers)
 
         response = conn.getresponse()
